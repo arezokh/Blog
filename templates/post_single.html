@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+    <!-- ======= Blog Section ======= -->
+    <section class="breadcrumbs">
+        <div class="container">
+  
+          <div class="d-flex justify-content-between align-items-center">
+            <h2>Blog</h2>
+  
+            <ol>
+              <li><a href="{% url 'home' %}">Home</a></li>
+              
+              <li>{{ post.title }}</li>
+            </ol>
+          </div>
+  
+        </div>
+      </section><!-- End Blog Section -->
+  
+      <!-- ======= Blog Single Section ======= -->
+      <section id="blog" class="blog">
+        <div class="container" data-aos="fade-up">
+  
+          <div class="row">
+  
+            <div class="col-lg-8 entries">
+  
+              <article class="entry entry-single">
+  
+                <div class="entry-img">
+                  <img src="{{ post.photo.url }}" alt="" class="img-fluid">
+                </div>
+  
+                <h2 class="entry-title">
+                  <a href="post-single.html">{{ post.title }}</a>
+                </h2>
+  
+                <div class="entry-meta">
+                  <ul>
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-single.html">{{ post.author }}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">{{ post.date }}</time></a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="blog-single.html">12 comments</a></li>
+                  </ul>
+                </div>
+  
+                <div class="entry-content">
+                  <p>{{ post.body }}</p>
+                </div>
+                {% if user.username == post.author.username %}
+                  <div class="entry-footer">
+                    <ul class="cats">
+                      <i class="bi bi-pen-fill"></i>
+                      <li><a href="{% url 'update' post.pk %}" style="padding-right: 12px;">Update</a></li>
+                      <i class="bi bi-file-x"></i>
+                      <li><a href="{% url 'delete' post.pk %}">Remove</a></li>
+                    </ul>
+                  </div>
+                {% endif %}
+                
+              </article><!-- End blog entry -->
+            </div>
+
+            <div class="col-lg-4">
+
+              {% block sidebar %}
+              {% include 'sidebar.html' %}
+              {% endblock sidebar %}
+  
+            </div><!-- End blog sidebar -->
+
+              <div class="blog-author d-flex align-items-center col-lg-8 entries">
+                <img src="{{ post.author.photo.url }}" class="rounded-circle float-left" alt="">
+                <div>
+                  <h4>{{ post.author.username }}</h4>
+                  <div class="social-links">
+                    <a href="{{ post.author.twitter_url }}"><i class="bi bi-twitter"></i></a>
+                    <a href="{{ post.author.instagram_url }}"><i class="bi bi-facebook"></i></a>
+                    <a href="{{ post.author.facebook_url }}"><i class="biu bi-instagram"></i></a>
+                  </div>
+                  <p>{{ post.author.about }}</p>
+                </div>
+              </div><!-- End blog author bio -->
+  
+              <div class="blog-comments">
+  
+                {% if post.comment_set.count > 1 %}
+                  <h4 class="comments-count">{{ post.comment_set.count }} Comments</h4>
+                {% else %}
+                  <h4 class="comments-count">{{ post.comment_set.count }} Comment</h4>
+                {% endif %}
+                
+                {% for comment in post.comment_set.all %}
+                <div id="comment-1" class="comment">
+                  <div class="d-flex">
+                    <div class="comment-img"><img src="{{ comment.author.photo.url }}" alt=""></div>
+                    <div>
+                      <h5>{{ comment.author }}</h5>
+                      <time datetime="2020-01-01">{{ comment.date }}</time>
+                      <p>
+                        {{ comment.body }}
+                      </p>
+                    </div>
+                  </div>
+                </div><!-- End comment #1 -->
+                {% endfor %}
+                
+  
+                {% if user.is_authenticated %}
+                <div class="reply-form">
+                  <h4>{{ user.username }} Leave a Reply</h4>
+                  <p>Your email address will not be published. Required fields are marked * </p>
+                  <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                  </form>
+                </div><!-- End blog comments -->
+                {% endif %}
+            </div><!-- End blog entries list -->
+  
+            
+  
+          </div>
+  
+        </div>
+      </section><!-- End Blog Single Section -->
+
+{% endblock content %}
