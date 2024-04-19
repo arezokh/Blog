@@ -6,7 +6,7 @@ Django-admin pass: amir1377
 
 The project is developed using the Django framework, utilizing its accessible virtual environment called 'venv.'
 
-Sqlite is the chosen database
+Sqlite is the chosen database.
 
 This project allows you to sign up, log in, log out,change password, reset password and you can put your social media urls.,
 
